@@ -1,0 +1,7 @@
+- name: create directory structure if necessary
+  file: path="/home/vagrant/sites/reservation.kisr.me"/{{ item }}
+        state=directory
+  with_items:
+    - static
+    - virtualenv
+    - source
