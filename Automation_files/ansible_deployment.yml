@@ -1,14 +1,24 @@
 ---
 - hosts: all
-  tasks: 
+  vars:
+    SRCPATH: /home/vagrant/sites/reservation.kisr.me
+  tasks:
     - name: Installing nginx web server
       sudo: yes
-      apt: pkg=nginx,git,python-pip,libpq-dev,python-dev,postgresql,postgresql-contrib,python-psycopg2 state=present
+      apt: pkg=nginx,git,python-pip,libpq-dev,python-dev,postgresql,postgresql-contrib,python-psycopg2,python-virtualenv state=present
 
     - name: create directory structure if necessary
-      file: path="/home/vagrant/sites/reservation.kisr.me"/{{ item }}
+      file: path="{{ SRCPATH }}"/{{ item }}
             state=directory
       with_items:
         - static
         - virtualenv
         - source
+
+    - name: getting source code from github
+      git: repo=https://github.com/KISRFSD/ReservationApp.git
+           dest="{{ SRCPATH }}"/source
+
+    - name: creating virtual environment
+      pip: requirements="{{ SRCPATH }}"/source/requirements.txt
+           virtualenv="{{ SRCPATH }}"/virtualenv
