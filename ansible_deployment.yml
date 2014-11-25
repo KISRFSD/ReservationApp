@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks: 
+    - name: Installing nginx web server
+      sudo: yes
+      apt: pkg=nginx,git,python-pip,libpq-dev,python-dev,postgresql,postgresql-contrib,python-psycopg2 state=present
+
