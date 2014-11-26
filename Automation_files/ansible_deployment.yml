@@ -60,7 +60,7 @@
       template: src=settings.py.j2
                 dest={{ SRCPATH }}/source/{{ app_name }}/settings.py
 
-    - name: Django: update static files
+    - name: Django update static files
       django_manage: command=collectstatic
                      app_path={{ SRCPATH }}/source
                      virtualenv={{ SRCPATH }}/virtualenv
