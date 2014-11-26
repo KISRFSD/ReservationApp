@@ -55,6 +55,10 @@
       pip: requirements={{ SRCPATH }}/source/requirements.txt
            virtualenv={{ SRCPATH }}/virtualenv
 
+    - name: updating settings.python
+      template: src=settings.py.j2
+                dest={{ SRCPATH }}/source/reservations/reservations/settings.py
+
     - name: add nginx config to sites-available
       sudo: yes
       template: src=nginx.conf.j2
