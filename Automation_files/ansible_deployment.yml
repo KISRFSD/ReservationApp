@@ -58,7 +58,17 @@
 
     - name: updating settings.py
       template: src=settings.py.j2
-                dest={{ SRCPATH }}/source/{{ app_name }}/{{ app_name }}/settings.py
+                dest={{ SRCPATH }}/source/{{ app_name }}/settings.py
+
+    - name: Django update static files
+      django_manage: command=collectstatic
+                     app_path={{ SRCPATH }}/source
+                     virtualenv={{ SRCPATH }}/virtualenv
+
+    - name: Django migrate
+      django_manage: command=migrate
+                     app_path={{ SRCPATH }}/source 
+                     virtualenv={{ SRCPATH }}/virtualenv
 
     - name: add nginx config to sites-available
       sudo: yes
