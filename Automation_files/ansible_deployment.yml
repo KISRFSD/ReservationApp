@@ -5,14 +5,27 @@
       db_name: django_app
       db_user: django
       db_password: sdjgh34iutwefhfgbqkj3 
+      SRCPATH: /home/vagrant/sites/reservation.kisr.me
+      user: "{{ ansible_env.USER }}"
+      host: reservation.kisr.me
 
-  tasks:
-    - name: Installing nginx web server
+  tasks: 
+    - name: Installing Packages
       sudo: yes
-      apt: pkg=nginx,git,python-pip,libpq-dev,python-dev,postgresql,postgresql-contrib,python-psycopg2 state=present
+      apt: pkg={{ item  }} state=installed update_cache=yes
+      with_items:
+          - nginx
+          - git
+          - python-pip
+          - libpq-dev
+          - python-dev
+          - postgresql
+          - postgresql-contrib
+          - python-virtualenv
+          - python-psycopg2
 
     - name: create directory structure if necessary
-      file: path="/home/vagrant/sites/reservation.kisr.me"/{{ item }}
+      file: path={{ SRCPATH }}/{{ item }}
             state=directory
       with_items:
         - static
@@ -34,3 +47,38 @@
       sudo_user: postgres
       postgresql_user: user={{ db_user }} db={{ db_name }} priv=ALL
 
+    - name: getting source code from github
+      git: repo=https://github.com/KISRFSD/ReservationApp.git
+           dest={{ SRCPATH }}/source
+
+    - name: creating virtual environment
+      pip: requirements={{ SRCPATH }}/source/requirements.txt
+           virtualenv={{ SRCPATH }}/virtualenv
+
+    - name: add nginx config to sites-available
+      sudo: yes
+      template: src=nginx.conf.j2
+                dest=/etc/nginx/sites-available/{{ host }}
+      notify:
+          - restart nginx
+    
+    - name: add symlink in nginx sites-enabled
+      sudo: yes
+      file: src=/etc/nginx/sites-available/{{ host }}
+            dest=/etc/nginx/sites-enabled/{{ host }} state=link
+      notify:
+          - restart nginx
+
+    - name: delete the default nginx file
+      sudo: yes
+      file: path=/etc/nginx/sites-{{ item }}/default state=absent
+      with_items:
+        - available
+        - enabled
+      notify:
+        - restart nginx 
+
+  handlers:
+    - name: restart nginx
+      sudo: yes
+      service: name=nginx state=restarted   
