@@ -8,6 +8,7 @@
       SRCPATH: /home/vagrant/sites/reservation.kisr.me
       user: "{{ ansible_env.USER }}"
       host: reservation.kisr.me
+      app_name: reservations
 
   tasks: 
     - name: Installing Packages

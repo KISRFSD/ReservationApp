@@ -10,4 +10,4 @@ chdir /home/{{ user }}/sites/{{ host }}/source
 
 exec ../virtualenv/bin/gunicorn \
     --bind localhost:8001 \
-    superlists.wsgi:application
+    {{ app_name }}.wsgi:application
