@@ -8,6 +8,7 @@
       SRCPATH: /home/vagrant/sites/reservation.kisr.me
       user: "{{ ansible_env.USER }}"
       host: reservation.kisr.me
+      app_name: reservations
 
   tasks: 
     - name: Installing Packages
@@ -78,7 +79,18 @@
       notify:
         - restart nginx 
 
+    - name: add gunicorn-upstart file
+      sudo: yes
+      template: src=gunicorn-upstart.conf.j2
+                dest=/etc/init/gunicorn-{{ host }}.conf
+      notify:
+        - restart gunicorn
+
   handlers:
     - name: restart nginx
       sudo: yes
-      service: name=nginx state=restarted   
+      service: name=nginx state=restarted
+
+    - name: restart gunicorn
+      sudo: yes
+      service: name=gunicorn-{{ host }} state=restarted 
