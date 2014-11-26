@@ -1,9 +1,8 @@
 server {
     listen 80;
-    server_name reservation.kisr.me;
 
     location /static {
-        alias /home/{{ user }}/sites/reservation.kisr.me/static;
+        alias /home/{{ user }}/sites/{{ host  }}/static;
     }
 
     location / {
