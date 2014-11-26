@@ -65,6 +65,11 @@
                      app_path={{ SRCPATH }}/source
                      virtualenv={{ SRCPATH }}/virtualenv
 
+    - name: Django migrate
+      django_manage: command=migrate
+                     app_path={{ SRCPATH }}/source 
+                     virtualenv={{ SRCPATH }}/virtualenv
+
     - name: add nginx config to sites-available
       sudo: yes
       template: src=nginx.conf.j2
