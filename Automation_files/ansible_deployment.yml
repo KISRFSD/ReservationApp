@@ -1,24 +1,110 @@
 ---
 - hosts: all
+
   vars:
-    SRCPATH: /home/vagrant/sites/reservation.kisr.me
-  tasks:
-    - name: Installing nginx web server
+      db_name: django_app
+      db_user: django
+      db_password: sdjgh34iutwefhfgbqkj3 
+      SRCPATH: /home/vagrant/sites/reservation.kisr.me
+      user: "{{ ansible_env.USER }}"
+      host: reservation.kisr.me
+      app_name: reservations
+
+  tasks: 
+    - name: Installing Packages
       sudo: yes
-      apt: pkg=nginx,git,python-pip,libpq-dev,python-dev,postgresql,postgresql-contrib,python-virtualenv state=present
+      apt: pkg={{ item  }} state=installed update_cache=yes
+      with_items:
+          - nginx
+          - git
+          - python-pip
+          - libpq-dev
+          - python-dev
+          - postgresql
+          - postgresql-contrib
+          - python-virtualenv
+          - python-psycopg2
 
     - name: create directory structure if necessary
-      file: path="{{ SRCPATH }}"/{{ item }}
+      file: path={{ SRCPATH }}/{{ item }}
             state=directory
       with_items:
         - static
         - virtualenv
         - source
 
+    - name: Create Database
+      sudo: yes
+      sudo_user: postgres
+      postgresql_db: name={{ db_name }}
+
+    - name: Create User
+      sudo: yes
+      sudo_user: postgres
+      postgresql_user: name={{ db_user }} password={{ db_password }} state=present role_attr_flags=NOSUPERUSER,CREATEDB
+
+    - name: Provide user with DB permissions
+      sudo: yes
+      sudo_user: postgres
+      postgresql_user: user={{ db_user }} db={{ db_name }} priv=ALL
+
     - name: getting source code from github
       git: repo=https://github.com/KISRFSD/ReservationApp.git
-           dest="{{ SRCPATH }}"/source
+           dest={{ SRCPATH }}/source
 
     - name: creating virtual environment
-      pip: requirements="{{ SRCPATH }}"/source/requirements.txt
-           virtualenv="{{ SRCPATH }}"/virtualenv
+      pip: requirements={{ SRCPATH }}/source/requirements.txt
+           virtualenv={{ SRCPATH }}/virtualenv
+
+    - name: updating settings.py
+      template: src=settings.py.j2
+                dest={{ SRCPATH }}/source/{{ app_name }}/settings.py
+
+    - name: Django update static files
+      django_manage: command=collectstatic
+                     app_path={{ SRCPATH }}/source
+                     virtualenv={{ SRCPATH }}/virtualenv
+
+    - name: Django migrate
+      django_manage: command=migrate
+                     app_path={{ SRCPATH }}/source 
+                     virtualenv={{ SRCPATH }}/virtualenv
+
+    - name: add nginx config to sites-available
+      sudo: yes
+      template: src=nginx.conf.j2
+                dest=/etc/nginx/sites-available/{{ host }}
+      notify:
+          - restart nginx
+    
+    - name: add symlink in nginx sites-enabled
+      sudo: yes
+      file: src=/etc/nginx/sites-available/{{ host }}
+            dest=/etc/nginx/sites-enabled/{{ host }} state=link
+      notify:
+          - restart nginx
+
+    - name: delete the default nginx file
+      sudo: yes
+      file: path=/etc/nginx/sites-{{ item }}/default state=absent
+      with_items:
+        - available
+        - enabled
+      notify:
+        - restart nginx 
+
+    - name: add gunicorn-upstart file
+      sudo: yes
+      template: src=gunicorn-upstart.conf.j2
+                dest=/etc/init/gunicorn-{{ host }}.conf
+      notify:
+        - restart gunicorn
+
+  handlers:
+    - name: restart nginx
+      sudo: yes
+      service: name=nginx state=restarted
+
+    - name: restart gunicorn
+      sudo: yes
+      service: name=gunicorn-{{ host }} state=restarted 

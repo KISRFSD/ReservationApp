@@ -1,0 +1,12 @@
+server {
+    listen 80;
+
+    location /static {
+        alias /home/{{ user }}/sites/{{ host  }}/static;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_pass http://127.0.0.1:8001;
+    }
+}
