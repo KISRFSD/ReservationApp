@@ -1,5 +1,5 @@
 """
-Django settings for reservations project.
+Django settings for blog project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%r-2v_a3s93^7t)8qrn4(g$1=*995p2cwn6$#=z8gx-s2hs631'
+SECRET_KEY = 'kk%h-i)@c^%=(0$h6f@yr_2x*429cew5$2df3h(t&=qeb17c6@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,8 +36,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'eventManage',
-    'eventHome',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,9 +48,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'reservations.urls'
+ROOT_URLCONF = 'blog.urls'
 
-WSGI_APPLICATION = 'reservations.wsgi.application'
+WSGI_APPLICATION = 'blog.wsgi.application'
 
 
 # Database
