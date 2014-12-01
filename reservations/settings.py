@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'eventManage',
     'eventHome',
+    'instructorsManagment',
 )
 
 MIDDLEWARE_CLASSES = (
