@@ -11,6 +11,7 @@
       app_name: reservations
 
   tasks: 
+
     - name: Installing Packages
       sudo: yes
       apt: pkg={{ item  }} state=installed update_cache=yes
@@ -51,6 +52,7 @@
     - name: getting source code from github
       git: repo=https://github.com/KISRFSD/ReservationApp.git
            dest={{ SRCPATH }}/source
+           version={{ lookup('env', 'BRANCH_NAME')  }}
       notify:
           - restart gunicorn
 
