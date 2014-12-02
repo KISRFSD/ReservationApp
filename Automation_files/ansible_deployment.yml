@@ -1,4 +1,5 @@
 ---
+
 - hosts: all
 
   vars:
@@ -9,6 +10,7 @@
       user: "{{ ansible_env.USER }}"
       host: reservation.kisr.me
       app_name: reservations
+      git_branch: "{{ lookup('env', 'BRANCH_NAME')  }}"
 
   tasks: 
 
@@ -49,10 +51,20 @@
       sudo_user: postgres
       postgresql_user: user={{ db_user }} db={{ db_name }} priv=ALL
 
-    - name: getting source code from github
+    - name: getting source code from github branch
       git: repo=https://github.com/KISRFSD/ReservationApp.git
            dest={{ SRCPATH }}/source
-           version={{ lookup('env', 'BRANCH_NAME')  }}
+           version={{ git_branch }}
+      register: result
+      ignore_errors: True
+      notify:
+          - restart gunicorn
+
+    - name: getting source code from github master
+      git: repo=https://github.com/KISRFSD/ReservationApp.git
+           dest={{ SRCPATH }}/source
+           version=master
+      when: result|failed
       notify:
           - restart gunicorn
 
