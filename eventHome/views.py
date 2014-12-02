@@ -12,4 +12,4 @@ def signup(request):
     return render(request, "signup.html")
 
 def regtrip(request):
-    return render(request, "reg-trip.html")
+    return render(request, "regtrip.html")
