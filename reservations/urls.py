@@ -7,8 +7,7 @@ urlpatterns = patterns('',
      url(r'^regtrip/$', 'eventHome.views.regtrip', name='regtrip'),
      url(r'^feedback/$', 'eventHome.views.feedback', name='feedback'),
      url(r'^signup/$', 'eventHome.views.signup', name='signup'),
-
-    # url(r'^blog/', include('blog.urls')),
-    url(r'^feedback/$', 'feedback.views.feed', name='feedback'),
-    url(r'^admin/', include(admin.site.urls)),
+     # url(r'^blog/', include('blog.urls')),
+     url(r'^feedback/$', 'feedback.views.feed', name='feedback'),
+     url(r'^admin/', include(admin.site.urls)),
 )
