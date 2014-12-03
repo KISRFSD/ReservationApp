@@ -7,6 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('instructorsManagment', '0001_initial'),
     ]
 
     operations = [
@@ -17,11 +18,11 @@ class Migration(migrations.Migration):
                 ('start_time', models.DateTimeField()),
                 ('end_time', models.DateTimeField()),
                 ('destination', models.CharField(max_length=100)),
-                ('event_status', models.BooleanField()),
-                ('instructor', models.TextField()),
+                ('event_status', models.BooleanField(default=True)),
                 ('gathering_point', models.CharField(max_length=100)),
                 ('max_seats', models.IntegerField()),
                 ('note', models.TextField()),
+                ('instructor', models.ForeignKey(to='instructorsManagment.Instructor')),
             ],
             options={
             },

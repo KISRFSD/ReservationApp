@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 # Create your models here.
 
+
 class Instructor(models.Model):
     inst = models.OneToOneField(User)
     mobile = models.BigIntegerField(max_length=8,
