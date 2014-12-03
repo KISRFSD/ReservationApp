@@ -37,10 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'eventManage',
-#    'feedback',
+    'feedback',
     'eventHome',
     'instructorsManagment',
-#    'userSignup'
 )
 
 MIDDLEWARE_CLASSES = (
