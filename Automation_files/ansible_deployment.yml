@@ -86,6 +86,12 @@
                      app_path={{ SRCPATH }}/source 
                      virtualenv={{ SRCPATH }}/virtualenv
 
+    - name: Django Load Initial Data
+      django_manage: command=loaddata
+                     fixtures={{ SRCPATH }}/source/fixtures/initial_data.json
+                     app_path={{ SRCPATH }}/source
+                     virtualenv={{ SRCPATH }}/virtualenv 
+
     - name: add nginx config to sites-available
       sudo: yes
       template: src=nginx.conf.j2
