@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
+
 urlpatterns = patterns('',
     # Examples:
      url(r'^$', 'eventHome.views.index', name='home'),
@@ -9,4 +10,6 @@ urlpatterns = patterns('',
      url(r'^signup/$', 'eventHome.views.signup', name='signup'),
      # url(r'^blog/', include('blog.urls')),
      url(r'^admin/', include(admin.site.urls)),
+     url(r'^diver/', include('diver.urls')),
+
 )

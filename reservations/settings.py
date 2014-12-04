@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'feedback',
     'eventHome',
     'instructorsManagment',
+    'diver',
 )
 
 MIDDLEWARE_CLASSES = (
