@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block page_title %}List of all divers{% endblock %}
+{% block content %}
+<ul>
+    {% for diver in divers %}
+        <li>
+            {{ diver.diver.username }} | {{ diver }}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

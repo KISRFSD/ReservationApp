@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block page_title %}Adding new Diver{% endblock %}
+{% block content %}
+<br>
+<br>
+<form action="." method="post">
+    <table>
+        {% csrf_token %}
+        {{ form.as_table}}
+       <tr>
+          <td>
+              <input type="submit" value="Sign up" />
+           </td>
+       </tr>
+    </table>
+</form>
+{% endblock %}
